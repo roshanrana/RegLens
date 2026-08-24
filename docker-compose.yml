@@ -1,0 +1,30 @@
+services:
+  reglens:
+    build: .
+    profiles:
+      - app
+    ports:
+      - "8000:8000"
+    environment:
+      REGLENS_RAG_MODE: mock
+      REGLENS_EMBEDDING_PROVIDER: fake
+      REGLENS_LLM_PROVIDER: fake
+      REGLENS_RERANKER_PROVIDER: fake
+      REGLENS_USE_FAKE_EMBEDDINGS: "true"
+      REGLENS_USE_FAKE_LLM: "true"
+      REGLENS_USE_FAKE_RERANKER: "true"
+      REGLENS_DATABASE_URL: sqlite:////app/data/reglens.db
+    volumes:
+      - reglens_data:/app/data
+
+  qdrant:
+    image: qdrant/qdrant:v1.12.1
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_storage:/qdrant/storage
+
+volumes:
+  reglens_data:
+  qdrant_storage:
