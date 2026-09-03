@@ -74,7 +74,7 @@ Primary user:
 
 Secondary users:
 
-- Forward Deployed Engineer demonstrating applied AI deployment
+- Customer-facing implementation engineer demonstrating applied AI deployment
 - Model risk, legal, or audit stakeholder reviewing traceability
 - Engineering reviewer evaluating reliability, tests, and architecture
 

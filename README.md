@@ -5,11 +5,11 @@ fake-mode vertical slice: ingest a synthetic rulebook, preserve rule citations, 
 deterministic chunks, retrieve evidence, generate grounded answers, and persist
 hash-chained, evidence-digested query audits locally.
 
-## Interview Snapshot
+## Project Snapshot
 
 | | |
 |---|---|
-| Role signal | Forward deployed AI engineering for compliance and regulatory workflows: cited answers, inspectable evidence, source lifecycle controls, and audit replay. |
+| Delivery signal | Customer-facing AI implementation for compliance and regulatory workflows: cited answers, inspectable evidence, source lifecycle controls, and audit replay. |
 | Product features | FINRA-style document ingestion, citation-preserving chunking, hybrid retrieval, exact citation routing, grounded generation, quote verification, weak-evidence abstention, durable chat sessions, transcript exports, hash-chained audits. |
 | Implementation stack | FastAPI, Python 3.11+, SQLite, BM25, Reciprocal Rank Fusion, deterministic fake embeddings/LLM/reranker, optional Qdrant, optional OpenAI providers, optional cross-encoder reranking, Docker/Compose. |
 | Validation performed | Lint, mypy, deterministic fake-mode tests, offline eval harness, audit verification endpoint, adversarial source-instruction evals, optional browser/Qdrant/OpenAI/model/container profiles, GitHub Actions. |

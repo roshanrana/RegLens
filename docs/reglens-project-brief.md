@@ -1,4 +1,4 @@
-# RegLens Forward Deployed Engineer Project Brief
+# RegLens Customer-Facing Implementation Project Brief
 
 ## Executive Summary
 
@@ -61,7 +61,7 @@ Secondary users:
 - Legal or policy reviewer who wants source-level traceability.
 - Model-risk or audit stakeholder who needs reproducibility.
 - Engineering reviewer evaluating reliability, architecture, and test quality.
-- Forward Deployed Engineer demonstrating practical AI deployment skill.
+- Customer-facing implementation engineer demonstrating practical AI deployment skill.
 
 ## Core User Workflows
 
@@ -451,19 +451,19 @@ partners:
 - use sidecar review agents for gap analysis
 - preserve deterministic defaults while integrating live providers
 
-This mirrors how an FDE can use AI internally to accelerate discovery,
+This mirrors how an implementation engineer can use AI internally to accelerate discovery,
 implementation, testing, documentation, and client demos.
 
-## Why This Matters for a Forward Deployed Engineer Role
+## Why This Matters for Customer-Facing Implementation
 
-Forward Deployed Engineers work at the boundary between client problems and
+Customer-facing implementation engineers work at the boundary between client problems and
 production software. RegLens demonstrates that skill set because it is not only
 a model demo. It is a usable, tested system with integration boundaries,
 operational controls, and stakeholder-facing auditability.
 
 ### Skill Mapping
 
-| FDE Skill | How RegLens Demonstrates It |
+| Implementation Skill | How RegLens Demonstrates It |
 | --- | --- |
 | Problem framing | Converts "chat with regulations" into auditable regulatory question answering. |
 | Client empathy | Prioritizes compliance analyst needs: citations, warnings, source inspection, audit exports. |
@@ -492,7 +492,7 @@ that are easier to inspect, challenge, verify, and reproduce.
 
 ## Example Demo Narrative
 
-A strong demo flow for interviews or portfolio review:
+A strong demo flow for technical reviews or portfolio review:
 
 1. Start RegLens in mock mode.
 2. Open the UI at `http://127.0.0.1:8011`.
@@ -507,7 +507,7 @@ A strong demo flow for interviews or portfolio review:
 11. Explain that OpenAI, Qdrant, browser tests, and cross-encoder models are
     optional profiles rather than requirements for local development.
 
-This tells a complete FDE story: discover the problem, build the system, prove
+This tells a complete delivery story: discover the problem, build the system, prove
 quality, and explain operational behavior.
 
 ## Real-World Deployment Considerations
@@ -562,6 +562,6 @@ complete lifecycle of an applied AI product:
 - add operational controls
 - document the product for future agents and stakeholders
 
-For a Forward Deployed Engineer role, this project shows more than the ability
+For customer-facing implementation work, this project shows more than the ability
 to call an LLM API. It shows the ability to turn AI into a reliable, testable,
 client-ready system that addresses a real business problem.
