@@ -32,7 +32,7 @@ RegLens is built against each of those failure modes specifically.
 
 ## Why fake mode is a feature
 
-The deterministic embeddings, generator and reranker are not stubs. They implement the same interfaces as the live providers and produce stable, inspectable behaviour, which is what makes 268 tests and an evaluation harness runnable in CI with no credentials and no network. The eval measures retrieval, citation precision, quote fidelity, refusal correctness, answer safety, warning recall and audit integrity against a fixture set, and writes a report every run. When a live provider is enabled, the same harness measures it.
+The deterministic embeddings, generator and reranker are not stubs. They implement the same interfaces as the live providers and produce stable, inspectable behaviour, which is what makes 275 tests and an evaluation harness runnable in CI with no credentials and no network. The eval measures retrieval, citation precision, quote fidelity, refusal correctness, answer safety, warning recall and audit integrity against a fixture set, and writes a report every run. When a live provider is enabled, the same harness measures it.
 
 ## What is measured
 

@@ -24,6 +24,9 @@ jobs:
       - name: Run deterministic verification
         run: python -m scripts.verify default
 
+      - name: README results card is current
+        run: python metrics/render.py --check
+
   container-verify:
     runs-on: ubuntu-latest
     steps:

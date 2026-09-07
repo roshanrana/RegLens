@@ -15,7 +15,48 @@ Everything runs offline by default: deterministic embeddings, a deterministic ge
 | **The problem** | Compliance teams need answers they can cite. A retrieval system that paraphrases a rule, invents a citation, or answers confidently from thin evidence is worse than no system, because it looks authoritative. |
 | **What it does** | Citation-preserving ingestion of regulatory text (Markdown, HTML, PDF, allowlisted FINRA URLs); hybrid retrieval (BM25 plus dense embeddings fused with Reciprocal Rank Fusion); exact-citation routing; optional reranking; grounded generation with prompt-local evidence markers; citation and quote verification; weak-evidence abstention; durable chat sessions with transcript export; hash-chained query audits with JSON and Markdown exports; API-key auth and rate limiting; an offline evaluation harness including adversarial source-instruction cases. |
 | **Stack** | Python 3.11+, FastAPI, SQLite, BM25, Reciprocal Rank Fusion, a dependency-free analyst UI; optional Qdrant, OpenAI embeddings and Responses API, `sentence-transformers` cross-encoder, `pypdf`; Docker and Compose; GitHub Actions. |
-| **Validation** | Lint, `mypy`, 268 deterministic fake-mode tests, an offline eval harness reporting retrieval, citation, quote, refusal, answer-safety, warning-recall and audit metrics, an audit-chain verification endpoint, and opt-in browser, Qdrant, OpenAI, model-download and container profiles. |
+| **Validation** | Lint, `mypy`, 275 deterministic fake-mode tests, an offline eval harness reporting retrieval, citation, quote, refusal, answer-safety, warning-recall and audit metrics, an audit-chain verification endpoint, and opt-in browser, Qdrant, OpenAI, model-download and container profiles. |
+
+<!-- metrics:start -->
+
+## Results
+
+<img src="docs/assets/metrics.svg" alt="Results card" width="920">
+
+Every figure below was observed by `make eval`, which runs offline with a fixed seed and no API key, and writes `metrics/headline.json`. 21 fixture queries over the synthetic rulebook with the fake LLM, fake embeddings and fake reranker bound. Rows marked *pending* need hardware, data or a service the offline harness does not have; nothing here is estimated.
+
+| Metric | Value | How it was measured |
+|---|---|---|
+| Abstention rate | **14.3%** | 3 of 21 fixture queries abstained (3 out-of-scope expected); 0 false abstentions; refusal accuracy 100.0% |
+| Citation faithfulness | **100.0%** | 21/21 answers had every quoted citation verified against retrieved evidence; citation precision 100.0% |
+| Recall@5 | **100.0%** | n=18 labeled of 21 queries over a 15-chunk synthetic corpus; recall@3 100.0%, recall@10 100.0% |
+| Cost / query | **$0.000202** | repo costing model (chars/4 tokens) over observed fake-run text at configured gpt-5.4-nano + text-embedding-3-small rates; mean of 21 queries, ~792 in / 34 out tokens; live-provider run pending |
+
+**Recall with reranking ON vs OFF (fake-lexical-reranker-v1, n=18)**
+
+| | | |
+|---|---|---|
+| R@1 reranker ON | `████████████████████` | 100.0% |
+| R@1 reranker OFF | `███████████████████░` | 94.4% |
+| R@3 reranker ON | `████████████████████` | 100.0% |
+| R@3 reranker OFF | `████████████████████` | 100.0% |
+| R@5 reranker ON | `████████████████████` | 100.0% |
+| R@5 reranker OFF | `████████████████████` | 100.0% |
+| R@10 reranker ON | `████████████████████` | 100.0% |
+| R@10 reranker OFF | `████████████████████` | 100.0% |
+
+**Run facts**
+
+| | Status | Evidence |
+|---|---|---|
+| Eval fixture | observed | 21 queries, 15 chunks, 2 corpora, fake LLM + fake embeddings, seed 0 |
+| Observed fake-run cost | observed | $0.000000 (fake providers) |
+| Answer safety / warning recall | observed | 100.0% / 100.0% on 4 adversarial source-instruction cases |
+| Audit hash chain | observed | 21 records, 0 failures, verified=True |
+| Cross-encoder reranker (ms-marco-MiniLM-L-6-v2) | pending | not measured: needs sentence-transformers and a model weight download; harness is offline |
+| Live OpenAI cost per query | pending | not measured: requires OPENAI_API_KEY; harness runs fake providers |
+
+<!-- metrics:end -->
 
 ## The answer path
 

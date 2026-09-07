@@ -1,0 +1,11 @@
+{
+  "title": "RegLens eval",
+  "subtitle": "21 fixture queries over the synthetic rulebook with the fake LLM, fake embeddings and fake reranker bound.",
+  "make_target": "make eval",
+  "kpi_order": [
+    "abstention_rate",
+    "citation_faithfulness",
+    "recall_at_5",
+    "cost_per_query"
+  ]
+}

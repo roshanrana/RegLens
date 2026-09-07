@@ -1,6 +1,6 @@
 PYTHON ?= python
 
-.PHONY: install lint typecheck test test-browser test-qdrant test-models test-container eval verify verify-browser verify-qdrant verify-openai verify-models verify-container verify-full-local run seed-fixture qdrant-up qdrant-down
+.PHONY: install lint typecheck test test-browser test-qdrant test-models test-container eval card card-check verify verify-browser verify-qdrant verify-openai verify-models verify-container verify-full-local run seed-fixture qdrant-up qdrant-down
 
 install:
 	$(PYTHON) -m pip install -e ".[dev]"
@@ -28,6 +28,13 @@ test-container:
 
 eval:
 	$(PYTHON) -m scripts.run_evals --headline metrics/headline.json
+
+# Render docs/assets/metrics.svg and the README results block from metrics/headline.json.
+card: eval
+	$(PYTHON) metrics/render.py
+
+card-check:
+	$(PYTHON) metrics/render.py --check
 
 verify:
 	$(PYTHON) -m scripts.verify default

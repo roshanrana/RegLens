@@ -7,7 +7,7 @@ A guided tour with the commands that show each feature and the files where it li
 ```bash
 python -m venv .venv && source .venv/bin/activate
 make install
-make verify                                  # lint, typecheck, 268 tests, eval
+make verify                                  # lint, typecheck, 275 tests, eval
 python -m uvicorn app.main:app --reload      # then open http://127.0.0.1:8000/
 ```
 
