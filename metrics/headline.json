@@ -1,0 +1,124 @@
+{
+  "kpis": {
+    "abstention_rate": {
+      "label": "Abstention rate",
+      "value": "14.3%",
+      "note": "3 of 21 fixture queries abstained (3 out-of-scope expected); 0 false abstentions; refusal accuracy 100.0%",
+      "accent": "teal"
+    },
+    "citation_faithfulness": {
+      "label": "Citation faithfulness",
+      "value": "100.0%",
+      "note": "21/21 answers had every quoted citation verified against retrieved evidence; citation precision 100.0%",
+      "accent": "blue"
+    },
+    "recall_at_5": {
+      "label": "Recall@5",
+      "value": "100.0%",
+      "note": "n=18 labeled of 21 queries over a 15-chunk synthetic corpus; recall@3 100.0%, recall@10 100.0%",
+      "accent": "violet"
+    },
+    "cost_per_query": {
+      "label": "Cost / query",
+      "value": "$0.000202",
+      "note": "repo costing model (chars/4 tokens) over observed fake-run text at configured gpt-5.4-nano + text-embedding-3-small rates; mean of 21 queries, ~792 in / 34 out tokens; live-provider run pending",
+      "accent": "amber"
+    }
+  },
+  "bars": {
+    "title": "Recall with reranking ON vs OFF (fake-lexical-reranker-v1, n=18)",
+    "rows": [
+      {
+        "label": "R@1 reranker ON",
+        "value": 100.0,
+        "max": 100,
+        "display": "100.0%",
+        "accent": "teal"
+      },
+      {
+        "label": "R@1 reranker OFF",
+        "value": 94.4,
+        "max": 100,
+        "display": "94.4%",
+        "accent": "blue"
+      },
+      {
+        "label": "R@3 reranker ON",
+        "value": 100.0,
+        "max": 100,
+        "display": "100.0%",
+        "accent": "teal"
+      },
+      {
+        "label": "R@3 reranker OFF",
+        "value": 100.0,
+        "max": 100,
+        "display": "100.0%",
+        "accent": "blue"
+      },
+      {
+        "label": "R@5 reranker ON",
+        "value": 100.0,
+        "max": 100,
+        "display": "100.0%",
+        "accent": "teal"
+      },
+      {
+        "label": "R@5 reranker OFF",
+        "value": 100.0,
+        "max": 100,
+        "display": "100.0%",
+        "accent": "blue"
+      },
+      {
+        "label": "R@10 reranker ON",
+        "value": 100.0,
+        "max": 100,
+        "display": "100.0%",
+        "accent": "teal"
+      },
+      {
+        "label": "R@10 reranker OFF",
+        "value": 100.0,
+        "max": 100,
+        "display": "100.0%",
+        "accent": "blue"
+      }
+    ]
+  },
+  "facts": {
+    "title": "Run facts",
+    "rows": [
+      {
+        "label": "Eval fixture",
+        "value": "21 queries, 15 chunks, 2 corpora, fake LLM + fake embeddings, seed 0",
+        "status": "ok"
+      },
+      {
+        "label": "Observed fake-run cost",
+        "value": "$0.000000 (fake providers)",
+        "status": "ok"
+      },
+      {
+        "label": "Answer safety / warning recall",
+        "value": "100.0% / 100.0% on 4 adversarial source-instruction cases",
+        "status": "ok"
+      },
+      {
+        "label": "Audit hash chain",
+        "value": "21 records, 0 failures, verified=True",
+        "status": "ok"
+      },
+      {
+        "label": "Cross-encoder reranker (ms-marco-MiniLM-L-6-v2)",
+        "value": "not measured: needs sentence-transformers and a model weight download; harness is offline",
+        "status": "pending"
+      },
+      {
+        "label": "Live OpenAI cost per query",
+        "value": "not measured: requires OPENAI_API_KEY; harness runs fake providers",
+        "status": "pending"
+      }
+    ]
+  }
+}

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import random
 from dataclasses import dataclass
 from pathlib import Path
 from time import perf_counter
@@ -10,12 +11,24 @@ from typing import Any
 from fastapi.testclient import TestClient
 
 from app.core.config import Settings
+from app.evals.headline import (
+    RecallProbe,
+    build_headline,
+    compare_reranker_recall,
+    load_fixture_chunks,
+    price_case,
+    summarize_costs,
+    write_headline,
+)
 from app.evals.metrics import citation_precision, mean, mrr_at_k, recall_at_k
 from app.main import create_app
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_QUESTIONS_PATH = ROOT / "app" / "evals" / "fixtures" / "questions.json"
 DEFAULT_REPORTS_DIR = ROOT / "reports"
+DEFAULT_HEADLINE_PATH = ROOT / "metrics" / "headline.json"
+DEFAULT_FIXTURE_PATH = ROOT / "app" / "evals" / "fixtures" / "synthetic_rulebook.md"
+EVAL_SEED = 0
 DEFAULT_THRESHOLDS = {
     "retrieval_recall_at_3": 0.85,
     "retrieval_recall_at_5": 0.9,
@@ -60,7 +73,9 @@ def run_evals(
     questions_path: Path = DEFAULT_QUESTIONS_PATH,
     reports_dir: Path = DEFAULT_REPORTS_DIR,
     top_k: int = 10,
+    headline_path: Path | None = None,
 ) -> dict[str, Any]:
+    random.seed(EVAL_SEED)
     questions = _load_questions(questions_path)
     reports_dir.mkdir(parents=True, exist_ok=True)
 
@@ -88,7 +103,14 @@ def run_evals(
             )
             latency_ms = int(round((perf_counter() - started_at) * 1000))
             case_results.append(
-                _case_result(item, response.json(), response.status_code, latency_ms)
+                _case_result(
+                    item,
+                    response.json(),
+                    response.status_code,
+                    latency_ms,
+                    generation_model=settings.openai_generation_model,
+                    embedding_model=settings.openai_embedding_model,
+                )
             )
 
         audit_verify = client.get("/audit/verify").json()
@@ -100,6 +122,7 @@ def run_evals(
     }
     report = {
         "passed": all(threshold_results.values()),
+        "seed": EVAL_SEED,
         "summary": summary,
         "thresholds": thresholds,
         "threshold_results": threshold_results,
@@ -107,7 +130,46 @@ def run_evals(
         "cases": case_results,
     }
     _write_reports(report, reports_dir)
+    if headline_path is not None:
+        _write_headline(report, questions, settings, headline_path, top_k=top_k)
     return report
+
+
+def _write_headline(
+    report: dict[str, Any],
+    questions: list[EvalQuestion],
+    settings: Settings,
+    headline_path: Path,
+    *,
+    top_k: int,
+) -> None:
+    fixture_paths = [DEFAULT_FIXTURE_PATH]
+    for question in questions:
+        if question.source_path is not None:
+            source_path = ROOT / question.source_path
+            if source_path not in fixture_paths:
+                fixture_paths.append(source_path)
+    probes = [
+        RecallProbe(
+            question=question.question,
+            expected_citations=tuple(question.expected_citations),
+            corpus_id=question.corpus_id,
+            corpus_version=question.corpus_version,
+        )
+        for question in questions
+    ]
+    comparison = compare_reranker_recall(
+        probes,
+        load_fixture_chunks(fixture_paths),
+        top_k=top_k,
+    )
+    costs = summarize_costs(
+        report["cases"],
+        generation_model=settings.openai_generation_model,
+        embedding_model=settings.openai_embedding_model,
+    )
+    headline = build_headline(report, comparison, costs, seed=EVAL_SEED)
+    write_headline(headline, headline_path)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -115,14 +177,22 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--questions", type=Path, default=DEFAULT_QUESTIONS_PATH)
     parser.add_argument("--reports-dir", type=Path, default=DEFAULT_REPORTS_DIR)
     parser.add_argument("--top-k", type=int, default=10)
+    parser.add_argument(
+        "--headline",
+        type=Path,
+        default=DEFAULT_HEADLINE_PATH,
+        help="Where to write the schema-validated headline.json (observed values only).",
+    )
     args = parser.parse_args(argv)
 
     report = run_evals(
         questions_path=args.questions,
         reports_dir=args.reports_dir,
         top_k=args.top_k,
+        headline_path=args.headline,
     )
     print(json.dumps({"passed": report["passed"], "summary": report["summary"]}, indent=2))
+    print(f"headline written to {args.headline}")
     return 0 if report["passed"] else 1
 
 
@@ -179,8 +249,13 @@ def _case_result(
     body: dict[str, Any],
     status_code: int,
     latency_ms: int,
+    *,
+    generation_model: str,
+    embedding_model: str,
 ) -> dict[str, Any]:
     evidence_labels = [str(item["citation_label"]) for item in body.get("evidence", [])]
+    evidence_snippets = [str(item.get("snippet", "")) for item in body.get("evidence", [])]
+    observed_cost = body.get("diagnostics", {}).get("cost_estimate", {})
     cited_labels = [str(item["citation_label"]) for item in body.get("citations", [])]
     confidence = str(body.get("confidence", ""))
     expected = question.expected_citations
@@ -220,6 +295,14 @@ def _case_result(
         "expected_warnings_present": expected_warnings_present,
         "audit_complete": bool(body.get("diagnostics", {}).get("audit", {}).get("record_hash")),
         "latency_ms": latency_ms,
+        "observed_cost_usd": float(observed_cost.get("estimated_cost_usd", 0.0)),
+        **price_case(
+            question=question.question,
+            evidence_snippets=evidence_snippets,
+            answer_text=answer,
+            generation_model=generation_model,
+            embedding_model=embedding_model,
+        ),
     }
 
 

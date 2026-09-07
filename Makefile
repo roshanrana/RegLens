@@ -27,7 +27,7 @@ test-container:
 	$(PYTHON) -m pytest tests/unit/test_container_config.py
 
 eval:
-	$(PYTHON) -m scripts.run_evals
+	$(PYTHON) -m scripts.run_evals --headline metrics/headline.json
 
 verify:
 	$(PYTHON) -m scripts.verify default
