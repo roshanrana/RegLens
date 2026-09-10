@@ -1,6 +1,6 @@
 PYTHON ?= python
 
-.PHONY: install lint typecheck test test-browser test-qdrant test-models test-container eval card card-check verify verify-browser verify-qdrant verify-openai verify-models verify-container verify-full-local run seed-fixture qdrant-up qdrant-down
+.PHONY: install lint typecheck test test-browser test-qdrant test-models test-container eval card card-check verify verify-browser verify-qdrant verify-openai verify-models verify-container verify-full-local run seed-fixture qdrant-up qdrant-down graph
 
 install:
 	$(PYTHON) -m pip install -e ".[dev]"
@@ -68,3 +68,6 @@ qdrant-up:
 
 qdrant-down:
 	docker compose down
+
+graph:
+	graphify update . && graphify cluster-only . --no-viz --no-label

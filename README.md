@@ -108,6 +108,7 @@ make verify        # lint, typecheck, offline tests, eval
 | [`docs/CHANGELOG.md`](docs/CHANGELOG.md) | The build log, wave by wave |
 | [`docs/reglens-project-brief.md`](docs/reglens-project-brief.md) | The original brief |
 | [`docs/agent-orchestration-notes.md`](docs/agent-orchestration-notes.md), [`docs/implementation-log.md`](docs/implementation-log.md) | How the work was planned and executed |
+| [`docs/graph/README.md`](docs/graph/README.md) | The offline code knowledge graph (graphify): how to build and query it, with three real examples |
 
 ## What it is not
 

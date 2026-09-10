@@ -11,3 +11,5 @@ __pycache__/
 data/raw/
 reports/
 tmp/
+graphify-out/*
+!graphify-out/GRAPH_REPORT.md

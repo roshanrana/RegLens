@@ -78,6 +78,23 @@ Optional API-key auth (`X-RegLens-API-Key` or bearer) and per-minute rate limiti
 
 Dependency-free HTML served from `/`: query, citations, evidence, diagnostics, provenance, audit export, source lifecycle, chat sessions and transcripts. `tests/e2e/test_ui_browser_smoke.py` ingests, asks, verifies citations, deletes a source and confirms it no longer retrieves.
 
+## Query the code graph
+
+RegLens carries an offline code knowledge graph (graphify: tree-sitter AST extraction, no LLM, no
+API key) — 1825 nodes, 6620 edges, 82 communities over the 123 files in `app/` and `tests/`.
+Rebuild it after code changes with `graphify update .` (seconds), then ask it questions instead of
+grepping cold:
+
+```bash
+graphify explain "RetrievalService"                                   # what it connects to
+graphify path "GenerationService" "verify_answer_citations"           # how generation reaches citation checking
+graphify affected "app_api_routes_audit_py_queryauditrepository" --depth 2   # blast radius of the audit repository
+```
+
+See [`docs/graph/README.md`](graph/README.md) for the full write-up, including a case where a
+short, ambiguous node name routed the graph through a test file instead of the real production
+call site.
+
 ## Things worth noticing
 
 - **Verification is code, not prompt.** The model is asked to cite; the system checks. Those are different guarantees.
