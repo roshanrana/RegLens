@@ -203,12 +203,12 @@ function caption(s, text, x, y, w) {
   s.addText("test_verify_answer_citations_rejects_fabricated_evidence_id\ntest_verify_answer_citations_rejects_non_retrieved_chunk_citation\ntest_verify_answer_citations_rejects_quote_absent_from_evidence\ntest_non_refusal_answer_without_citations_is_rejected", { x: 0.65, y: 3.85, w: 4.3, h: 0.95, fontFace: "Courier New", fontSize: 7.5, color: WHITE, isTextBox: true, margin: 0, valign: "top" });
   const badges = [["✓ verified", "quote found in the cited, retrieved chunk", MINT], ["✗ rejected", "fabricated evidence id, or a quote not in the chunk", RED], ["⚠ warned", "source text tried to inject an instruction; fact kept, instruction dropped", GOLD], ["◇ abstained", "evidence too weak; refusal allowed to carry no citations", MUTED]];
   badges.forEach((b, i) => {
-    const y = 1.3 + i * 0.75;
-    card(s, 5.4, y, 4.1, 0.62);
-    s.addText(b[0], { x: 5.55, y: y + 0.05, w: 1.5, h: 0.5, fontFace: BF, fontSize: 12, bold: true, color: b[2], isTextBox: true, margin: 0, valign: "middle" });
-    s.addText(b[1], { x: 7.0, y: y + 0.05, w: 2.4, h: 0.5, fontFace: BF, fontSize: 8.5, color: INK, isTextBox: true, margin: 0, valign: "middle" });
+    const y = 1.3 + i * 0.7;
+    card(s, 5.4, y, 4.1, 0.58);
+    s.addText(b[0], { x: 5.55, y: y + 0.04, w: 1.5, h: 0.5, fontFace: BF, fontSize: 12, bold: true, color: b[2], isTextBox: true, margin: 0, valign: "middle" });
+    s.addText(b[1], { x: 7.0, y: y + 0.04, w: 2.4, h: 0.5, fontFace: BF, fontSize: 8.5, color: INK, isTextBox: true, margin: 0, valign: "middle" });
   });
-  box(s, 5.4, 4.2, 4.1, 0.65, "Why this matters", "Citation faithfulness is the eval's headline KPI: 21/21 answers, every quote verified (100.0%).", { bs: 8.5 });
+  box(s, 5.4, 4.13, 4.1, 0.72, "Why this matters", "Citation faithfulness is the eval's headline KPI: 21/21 answers, every quote verified (100.0%).", { bs: 8.5 });
 }
 
 // ---------- 9 Data architecture
@@ -270,7 +270,7 @@ function caption(s, text, x, y, w) {
 // ---------- 13 Screenshot: cited answer
 {
   const s = base("A cited answer, verified against retrieved evidence", "Screenshots · analyst UI, mock mode");
-  imgFit(s, ASSETS + "13-cited-answer.png", 0.5, 1.25, 9.0, 3.55, 1440, 749);
+  imgFit(s, ASSETS + "13-cited-answer.png", 0.5, 1.25, 9.0, 3.55, 1047, 413);
   caption(s, "\"How long must records be retained?\" against the bundled synthetic rulebook. FINRA Rule 1030(b) is cited, its quote is verified, and the provenance panel shows the audit hash chain and evidence digest.", 0.5, 4.9, 9);
 }
 
@@ -339,14 +339,14 @@ function caption(s, text, x, y, w) {
   });
   table(s, [
     ["KPI", "Value", "How measured"],
-    ["Tests", "275 passed, 5 deselected", "default pytest marker set, this run"],
-    ["Abstention rate", "14.3% (3/21), 0 false abstentions", "make eval, this run"],
-    ["Citation faithfulness", "100.0% (21/21)", "make eval, this run"],
-    ["Recall@5 reranker ON vs OFF", "100.0% vs 94.4% (n=18)", "headline.json bars"],
-    ["Cost / query (fake-run model)", "$0.000202", "repo costing model, observed"],
-    ["Avg eval latency", "5.8 ms (in-process, fake providers)", "make eval, this run"],
-    ["Live OpenAI cost / cross-encoder", "pending", "needs a key / a model download"],
-  ], 5.9, 1.3, 3.6, [1.65, 1.15, 0.8], 7.5);
+    ["Tests", "275 passed, 5 deselected", "pytest, this run"],
+    ["Abstention rate", "14.3% (3/21), 0 false abstentions", "make eval"],
+    ["Citation faithfulness", "100.0% (21/21)", "make eval"],
+    ["Recall@5 reranker ON vs OFF", "100.0% vs 94.4% (n=18)", "headline.json"],
+    ["Cost / query (fake-run model)", "$0.000202", "costing model"],
+    ["Avg eval latency", "5.8 ms (in-process, fake providers)", "make eval"],
+    ["Live OpenAI cost / cross-encoder", "pending", "needs key/model"],
+  ], 5.9, 1.3, 3.6, [1.45, 1.15, 1.0], 7.5);
   s.addText("All five ratios read 1.0 on the 21-case offline fixture; the honest caveat is the corpus is 15 chunks and the embeddings are deterministic lexical hashes, not a production-scale semantic benchmark.", { x: 0.5, y: 4.9, w: 9, h: 0.35, fontFace: BF, fontSize: 9, italic: true, color: MUTED, isTextBox: true, margin: 0 });
 }
 
